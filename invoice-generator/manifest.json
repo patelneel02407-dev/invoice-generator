@@ -1,0 +1,9 @@
+{
+  "name": "InvoiceGen - Premium Invoice Generator",
+  "short_name": "InvoiceGen",
+  "description": "A premium and simple invoice generator for your business.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#4f46e5"
+}

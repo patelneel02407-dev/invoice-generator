@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium Invoice Generator</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#4f46e5">
+    <!-- html2pdf library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <!-- Navigation Bar -->
+        <nav class="nav-bar no-print">
+            <div class="nav-brand" onclick="showView('home')">
+                InvoiceGen
+            </div>
+            <div class="nav-actions">
+                <button class="btn btn-primary" onclick="createNewInvoice()">
+                    + New Invoice
+                </button>
+            </div>
+        </nav>
+
+        <!-- Home View (Dashboard) -->
+        <div id="view-home" class="view">
+            <div class="view-header">
+                <h2>Your Invoices</h2>
+            </div>
+
+            <div class="dashboard-stats">
+                <div class="stat-card">
+                    <label>Total Generated</label>
+                    <div class="value" id="stat-count">0</div>
+                </div>
+                <div class="stat-card">
+                    <label>Total Amount</label>
+                    <div class="value" id="stat-total">₹ 0.00</div>
+                </div>
+            </div>
+
+            <div id="invoice-grid" class="invoice-grid">
+                <!-- Invoices will be injected here -->
+            </div>
+
+            <div id="empty-state" class="empty-state hidden">
+                <h3>No invoices yet</h3>
+                <p>Click "New Invoice" to create your first one.</p>
+            </div>
+        </div>
+
+        <!-- Editor View -->
+        <div id="view-editor" class="view hidden">
+            <div class="view-header no-print">
+                <button class="btn btn-outline" onclick="showView('home')">← Back to Dashboard</button>
+                <div class="editor-title">
+                    <h2 id="editor-heading">New Invoice</h2>
+                </div>
+            </div>
+
+            <div id="invoice">
+                <div class="header">
+                    <div class="company-branding">
+                        <div class="company-name" contenteditable="true" id="companyName">Your Company Name</div>
+                        <div class="company-address" contenteditable="true" id="companyAddress">Ahmedabad, India</div>
+                    </div>
+
+                    <div class="invoice-info">
+                        <div class="invoice-number-wrap">
+                            Invoice No: <span id="invoiceNumber"></span>
+                        </div>
+                        <div class="date-wrap">
+                            <label for="date">Date:</label>
+                            <input type="date" id="date">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="customer-section">
+                    <div class="input-group">
+                        <label>Customer Name</label>
+                        <input type="text" id="customerName" placeholder="Enter name">
+                    </div>
+                    <div class="input-group">
+                        <label>Phone / Email</label>
+                        <input type="text" id="phone" placeholder="Enter contact info">
+                    </div>
+                </div>
+
+                <table id="items">
+                    <thead>
+                        <tr>
+                            <th style="width: 45%;">Item Description</th>
+                            <th style="width: 15%;">Price (₹)</th>
+                            <th style="width: 15%;">Qty</th>
+                            <th style="width: 15%;">Total (₹)</th>
+                            <th style="width: 10%;" class="no-print"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Items injected here -->
+                    </tbody>
+                </table>
+
+                <div class="no-print" style="margin-bottom: 2rem;">
+                    <button class="btn btn-outline" onclick="addItem()">+ Add Item</button>
+                </div>
+
+                <div class="summary-container">
+                    <div class="summary-details">
+                        <div class="summary-row">
+                            <label>Subtotal</label>
+                            <span>₹ <span id="subtotal">0.00</span></span>
+                        </div>
+                        <div class="summary-row">
+                            <label>GST (<input type="number" id="gstRate" value="18" style="width: 45px; padding: 2px 5px; margin: 0; text-align: center; border: 1px dashed var(--border);">%)</label>
+                            <span>₹ <span id="gst">0.00</span></span>
+                        </div>
+                        <div class="summary-row grand-total">
+                            <label>Total</label>
+                            <span>₹ <span id="grandTotal">0.00</span></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="editor-actions no-print">
+                <button class="btn btn-danger" onclick="deleteCurrentInvoice()" id="delete-invoice-btn">Delete Invoice</button>
+                <button class="btn btn-outline" onclick="saveAndExit()">Save & Close</button>
+                <button class="btn btn-primary download-btn" onclick="downloadPDF()">Download PDF</button>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="db.js"></script>
+    <script src="script.js"></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                    .then(reg => console.log('Service Worker registered'))
+                    .catch(err => console.log('Service Worker registration failed', err));
+            });
+        }
+    </script>
+
+</body>
+
+</html>
